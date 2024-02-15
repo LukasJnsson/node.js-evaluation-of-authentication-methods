@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="utf-8">
+      <title>node.js-end-to-end-encrypted-platform</title>
+      <meta name="generator" content={Astro.generator} />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <p id="isLoggedIn">Not signed in.</p>
+    <h2>Sign up</h2>
+    <form id="signup">
+        <label for="username">Username</label>
+        <input id="username" name="username" /><br />
+        <button>Sign up with passkeys</button>
+    </form>
+    <h2>Sign in</h2>
+    <form id="login">
+        <button>Sign in with passkeys</button>
+    </form>
+    <h2>Send message</h2>
+    <form id="message-form">
+        <label for="message">Message</label>
+        <input id="message" name="message" /><br />
+        <button>Send message</button>
+    </form>
+</body>
+</html>
+
+<script>
+	import auth from "../authenticate";
+	import { sendMessage } from "../message";
+
+	const signup = document.getElementById("signup");
+	const login = document.getElementById("login");
+	const loggedIn = document.getElementById("isLoggedIn");
+	const messageForm = document.getElementById("message-form");
+
+	signup.addEventListener("submit", async (e) => {
+		e.preventDefault();
+		const formData = new FormData(signup);
+		const username = formData.get("username");
+		if (typeof username !== "string" || username.length < 1) return;
+		const user = await auth.signUp(username);
+		loggedIn.textContent = `Signed in as ${user.username} (user ID: ${user.id}).`;
+	});
+
+	login.addEventListener("submit", async (e) => {
+		e.preventDefault();
+		const user = await auth.signIn();
+		loggedIn.textContent = `Signed in as ${user.username} (user ID: ${user.id}).`;
+	});
+
+	messageForm.addEventListener("submit", async (e) => {
+		e.preventDefault();
+		const formData = new FormData(messageForm);
+		const message = formData.get("message");
+		const sentMessage = await sendMessage(message);
+		console.log(sentMessage);
+	});
+</script>
+
+<style>
+	body {
+        width: 80%;
+        margin: auto;
+	}
+	button, input {
+		display: block;
+        margin: -1;
+	}
+		input[type="submit"] {
+		display: block;
+		margin: 1em 0;
+	}
+</style>
