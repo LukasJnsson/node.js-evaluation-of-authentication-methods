@@ -3,13 +3,45 @@
 
 <body>
 
-    Username<input id="username" type="text" value="dario.salvi@mau.se"><br>
-    Password<input id="password" type="text" value="this is a long passphrase"><br>
-    <button id="register">Register User</button><br><br><br>
-    <button id="login">Login</button><br><br><br>
-    <textarea id="message"></textarea>
-    <button id="encrypt">Send message</button><br>
-    <button id="decrypt">Get message</button>
+    <form onsubmit="event.preventDefault()" >
+        <div class="container">
+            <h2>Register</h2>
+            <label for="usernameReg"><b>Username</b></label>
+            <input type="text" placeholder="Choose a Username" id="usernameReg" required>
+            
+            <br>
+
+            <label for="passwordReg"><b>Password</b></label>
+            <input type="password" placeholder="Choose a Password" id="passwordReg" required>
+
+            <br>
+
+            <button id="register">Register</button>
+        </div>
+    </form>
+
+    <br>
+
+    <form id="loginForm" onsubmit="event.preventDefault();">
+        <div class="container">
+            <h2>Login</h2>
+            <label for="usernameLogIn"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" id="usernameLogIn" required>
+
+            <br>
+        
+            <label for="passwordLogIn"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" id="passwordLogIn" required>
+
+            <br>
+        
+            <button id="login">Login</button>
+        </div>
+    </form>
+
+    <p id="isLoggedIn">Not signed in.</p>
+
+    <br>
 
     <script src="https://cdn.jsdelivr.net/npm/node-forge@1.3.1/dist/forge.min.js"></script>
 
@@ -30,9 +62,14 @@
 
         import API from "./api.js"
 
+        const loggedIn = document.getElementById("isLoggedIn");
+
         let registerBtn = document.getElementById("register")
-        let usernameInp = document.getElementById("username")
-        let passwordInp = document.getElementById("password")
+        let usernameInp = document.getElementById("usernameReg")
+        let passwordInp = document.getElementById("passwordReg")
+
+        let usernameLogIn = document.getElementById("usernameLogIn")
+        let passwordLogIn = document.getElementById("passwordLogIn")
 
         let loginBtn = document.getElementById("login")
 
@@ -46,6 +83,12 @@
             // use the password to derive an AES key
             let username = usernameInp.value
             let password = passwordInp.value
+
+            if(password.length < 12) {
+                alert("Password must be at least 12 characters long.");
+                return false;
+            }
+
             console.log('Registering uname: ' + username + ', pwd: ' + password)
 
             console.log('generating master key ...')
@@ -95,8 +138,8 @@
         })
 
         loginBtn.addEventListener('click', async () => {
-            let password = passwordInp.value
-            let username = usernameInp.value
+            let password = passwordLogIn.value
+            let username = usernameLogIn.value
             console.log('uname: ' + username + ', pwd: ' + password)
 
             console.log('generating keys ...')
@@ -123,32 +166,28 @@
             console.log('decripting profile ...')
             let profile = await decrypt(profileEncr.encrypted.data, MK, profileEncr.encrypted.iv)
             console.log('profile decripted', profile)
-        })
 
-        encryptBtn.addEventListener('click', async () => {
-            console.log('encrypting message ...')
-            let message = messageInp.value
-            const { cipher, iv } = await encrypt(message, MK)
-
-            console.log('sending message ...')
-            await API.sendMessage(cipher, iv)
-            console.log('message sent')
-            messageInp.value = ''
-        })
-
-        decryptBtn.addEventListener('click', async () => {
-            console.log('getting message ...')
-            let msg = await API.getMessage()
-            console.log(msg)
-            console.log('decrypting message ...')
-            let decryptedTxt = await decrypt(msg.message, MK, msg.iv)
-            messageInp.value = decryptedTxt
-            console.log("message decrypted", decryptedTxt)
+            loggedIn.textContent = `Signed in as ${profile}!`;
         })
 
 
     </script>
 
 </body>
+
+<style>
+    body {
+        width: 80%;
+        margin: auto;
+    }
+    button, input {
+        display: block;
+        margin: -1;
+    }
+        input[type="submit"] {
+        display: block;
+        margin: 1em 0;
+    }
+</style>
 
 </html>
