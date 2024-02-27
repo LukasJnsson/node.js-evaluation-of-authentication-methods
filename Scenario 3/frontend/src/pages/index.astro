@@ -19,12 +19,6 @@
 		<input id="usernameLogin" name="usernameLogin" /><br />
         <button>Sign in with passkeys</button>
     </form>
-    <h2>Send message</h2>
-    <form id="message-form">
-        <label for="message">Message</label>
-        <input id="message" name="message" /><br />
-        <button>Send message</button>
-    </form>
 </body>
 </html>
 
@@ -35,7 +29,6 @@
 	const signup = document.getElementById("signup");
 	const login = document.getElementById("login");
 	const loggedIn = document.getElementById("isLoggedIn");
-	const messageForm = document.getElementById("message-form");
 	const usernameLogin = document.getElementById("usernameLogin");
 
 	signup.addEventListener("submit", async (e) => {
@@ -61,14 +54,6 @@
 		}
 		const user = await auth.signIn(credId);
 		loggedIn.textContent = `Signed in as ${user.username} (user ID: ${user.id}).`;	
-	});
-
-	messageForm.addEventListener("submit", async (e) => {
-		e.preventDefault();
-		const formData = new FormData(messageForm);
-		const message = formData.get("message");
-		const sentMessage = await sendMessage(message);
-		console.log(sentMessage);
 	});
 </script>
 
