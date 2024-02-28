@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="utf-8">
+      <title>node.js-end-to-end-encrypted-platform</title>
+      <meta name="generator" content={Astro.generator} />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	  <title>passkeys_with_username</title>
+</head>
+<body>
+    <p id="isLoggedIn">Not signed in.</p>
+    <h2>Sign up</h2>
+    <form id="signup">
+        <label for="username">Username</label>
+        <input id="username" name="username" /><br />
+        <button>Sign up with passkeys</button>
+    </form>
+    <h2>Sign in</h2>
+    <form id="login">
+		<input id="usernameLogin" name="usernameLogin" /><br />
+        <button>Sign in with passkeys</button>
+    </form>
+</body>
+</html>
+
+<script>
+	import auth from "../authenticate";
+
+	const signup = document.getElementById("signup");
+	const login = document.getElementById("login");
+	const loggedIn = document.getElementById("isLoggedIn");
+	const usernameLogin = document.getElementById("usernameLogin");
+
+	signup.addEventListener("submit", async (e) => {
+		e.preventDefault();
+		const formData = new FormData(signup);
+		const username = formData.get("username");
+		if (typeof username !== "string" || username.length < 1) return;
+		const user = await auth.signUp(username);
+		loggedIn.textContent = `Signed in as ${user.username} (credential id: ${user.credential_id}).`;
+	});
+
+	login.addEventListener("submit", async (e) => {
+		e.preventDefault();
+		const userInDatabase = usernameLogin.value;
+		const response = await fetch(`http://localhost:3001/api/v1/users/username/${userInDatabase}`);
+		const user = await response.text();
+
+		let userExist;
+		if (user) {
+			userExist = JSON.parse(user);
+		}
+		if(!userExist) {
+			alert(`Could not find user with username '${userInDatabase}'`);
+			loggedIn.textContent = `Could not find user with username '${userInDatabase}'`
+			return;
+		}
+		const credId = userExist.credential_id;
+		const authUser = await auth.signIn(credId);
+		loggedIn.textContent = `Signed in as ${authUser.username} (credential id: ${authUser.credential_id}).`;	
+	});
+</script>
+
+<style>
+	body {
+        width: 80%;
+        margin: auto;
+	}
+	button, input {
+		display: block;
+        margin: -1;
+	}
+		input[type="submit"] {
+		display: block;
+		margin: 1em 0;
+	}
+</style>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>username_with_long_password</title>
+</head>
+<body>
+    <form onsubmit="event.preventDefault()" >
+        <div class="container">
+            <h2>Register</h2>
+            <label for="usernameReg"><b>Username</b></label>
+            <input type="text" placeholder="Choose a Username" id="usernameReg" required>
+            
+            <br>
+
+            <label for="passwordReg"><b>Password</b></label>
+            <input type="password" placeholder="Choose a Password" id="passwordReg" required>
+
+            <br>
+
+            <button id="register">Register</button>
+        </div>
+    </form>
+
+    <br>
+
+    <form id="loginForm" onsubmit="event.preventDefault();">
+        <div class="container">
+            <h2>Login</h2>
+            <label for="usernameLogIn"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" id="usernameLogIn" required>
+
+            <br>
+        
+            <label for="passwordLogIn"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" id="passwordLogIn" required>
+
+            <br>
+        
+            <button id="login">Login</button>
+        </div>
+    </form>
+
+    <p id="isLoggedIn">Not signed in.</p>
+
+    <br>
+
+    <script src="https://cdn.jsdelivr.net/npm/node-forge@1.3.1/dist/forge.min.js"></script>
+
+    <script type="module">
+        import {
+            generateMasterKey,
+            generatePrivatePublicKeys,
+            getKeyFromPassword,
+            wrapKey,
+            unwrapKey,
+            extractKey,
+            sign,
+            encrypt,
+            decrypt,
+            bytesToString,
+            stringToBytes
+        } from "./crypto.js"
+
+        import API from "./api.js"
+
+        const loggedIn = document.getElementById("isLoggedIn");
+
+        let registerBtn = document.getElementById("register")
+        let usernameInp = document.getElementById("usernameReg")
+        let passwordInp = document.getElementById("passwordReg")
+
+        let usernameLogIn = document.getElementById("usernameLogIn")
+        let passwordLogIn = document.getElementById("passwordLogIn")
+
+        let loginBtn = document.getElementById("login")
+
+        let messageInp = document.getElementById("message")
+        let encryptBtn = document.getElementById("encrypt")
+        let decryptBtn = document.getElementById("decrypt")
+
+        let MK
+
+        registerBtn.addEventListener('click', async () => {
+            // use the password to derive an AES key
+            let username = usernameInp.value
+            let password = passwordInp.value
+
+            if(password.length < 12) {
+                alert("Password must be at least 12 characters long.");
+                return false;
+            }
+
+            console.log('Registering uname: ' + username + ', pwd: ' + password)
+
+            console.log('generating master key ...')
+            let masterKey = await generateMasterKey()
+            console.log(masterKey)
+
+            let userProfile = {
+            }
+            console.log('encrypting the user profile ...')
+            const { cipher, iv } = await encrypt(JSON.stringify({
+                username
+            }), masterKey)
+
+            userProfile.encrypted = {
+                data: cipher,
+                iv: iv
+            }
+            console.log(userProfile)
+
+            console.log('deriving a symmetric key ...')
+
+            let aeskey = await getKeyFromPassword(password, username)
+            console.log(aeskey)
+
+            console.log('exporting wrapped master key ...')
+            //now we encrypt the public, the private and the master keys with this derived key
+            let wrapped = await wrapKey(masterKey, aeskey)
+            let wrappedMKJson = {
+                key: bytesToString(wrapped.wrappedKey),
+                iv: bytesToString(wrapped.iv)
+            }
+            console.log(wrappedMKJson)
+
+            console.log('generating public and private keys ...')
+            // it is important to combine both uname and pwd 
+            // else one can find a pwd by trying to login with all sorts of combinations until hitting one
+            // TODO: maybe more clever ways of combining these 2 together?
+            let seed = username + password
+            let pp = await generatePrivatePublicKeys(seed)
+            console.log(pp)
+
+            console.log('exporting public key  ...')
+            let publicJson = await extractKey(pp.publicKey)
+            console.log(publicJson)
+
+            API.registerUser(publicJson, wrappedMKJson, userProfile)
+        })
+
+        loginBtn.addEventListener('click', async () => {
+            let password = passwordLogIn.value
+            let username = usernameLogIn.value
+            console.log('uname: ' + username + ', pwd: ' + password)
+
+            console.log('generating keys ...')
+            let aeskey = await getKeyFromPassword(password, username)
+            let seed = username + password
+            let pp = await generatePrivatePublicKeys(seed)
+
+            console.log('logging in ...')
+            let publicJson = await extractKey(pp.publicKey)
+            let challenge = API.loginStartChallenge(publicJson)
+            // sign
+            let signature = await sign(pp.privateKey, challenge)
+            let profileEncr = await API.completeChallenge(challenge, signature)
+            console.log('logged in!', profileEncr)
+
+            console.log('recovering MK ...')
+            let wrappedMKJson = await API.getMasterKey()
+            let recMK = stringToBytes(wrappedMKJson.key)
+            let iv = stringToBytes(wrappedMKJson.iv)
+
+            MK = await unwrapKey(recMK, iv, aeskey)
+            console.log('master key recovered', MK)
+
+            console.log('decripting profile ...')
+            let profile = await decrypt(profileEncr.encrypted.data, MK, profileEncr.encrypted.iv)
+            console.log('profile decripted', profile)
+
+            loggedIn.textContent = `Signed in as ${profile}!`;
+        })
+
+
+    </script>
+
+</body>
+
+<style>
+    body {
+        width: 80%;
+        margin: auto;
+    }
+    button, input {
+        display: block;
+        margin: -1;
+    }
+        input[type="submit"] {
+        display: block;
+        margin: 1em 0;
+    }
+</style>
+
+</html>
