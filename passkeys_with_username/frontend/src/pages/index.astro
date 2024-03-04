@@ -8,28 +8,42 @@
 	  <title>passkeys_with_username</title>
 </head>
 <body>
-    <p id="isLoggedIn">Not signed in.</p>
-    <h2>Sign up</h2>
+    
     <form id="signup">
-        <label for="username">Username</label>
+		<h2>Sign up</h2>
+        <label for="username">Email</label>
         <input id="username" name="username" /><br />
+
+		<label for="reg_fname">First Name</label>
+		<input id="reg_fname" name="reg_fname" /><br />
+
+		<label for="reg_lname">Last Name</label>
+		<input id="reg_lname" name="reg_lname" /><br />
+
+		<label for="reg_pnum">Personal Number</label>
+		<input id="reg_pnum" name="reg_pnum" /><br />
+
         <button>Sign up with passkeys</button>
     </form>
-    <h2>Sign in</h2>
-    <form id="login">
+    <form id="login" class="hidden">
+	    <h2>Sign in</h2>
 		<input id="usernameLogin" name="usernameLogin" /><br />
         <button>Sign in with passkeys</button>
     </form>
+
+	<p id="isLoggedIn" class="hidden">Not signed in.</p>
 </body>
 </html>
 
 <script>
 	import auth from "../authenticate";
+	const users = [];
 
 	const signup = document.getElementById("signup");
 	const login = document.getElementById("login");
 	const loggedIn = document.getElementById("isLoggedIn");
 	const usernameLogin = document.getElementById("usernameLogin");
+	const fName = 
 
 	signup.addEventListener("submit", async (e) => {
 		e.preventDefault();
@@ -38,6 +52,16 @@
 		if (typeof username !== "string" || username.length < 1) return;
 		const user = await auth.signUp(username);
 		loggedIn.textContent = `Signed in as ${user.username} (credential id: ${user.credential_id}).`;
+
+		let firstName = document.forms["signup"]["reg_fname"].value;
+		let lastName = document.forms["signup"]["reg_lname"].value
+		let personalNumber = document.forms["signup"]["reg_pnum"].value
+
+		users.push({username: username, firstName: firstName, lastName: lastName, personalNumber: personalNumber});
+
+		// Show the login form once registration is successful
+		signup.classList.add("hidden"); // Hide the signup form
+		login.classList.remove("hidden"); // Show the login form
 	});
 
 	login.addEventListener("submit", async (e) => {
@@ -49,6 +73,7 @@
 		let userExist;
 		if (user) {
 			userExist = JSON.parse(user);
+			loggedIn.textContent = users;
 		}
 		if(!userExist) {
 			alert(`Could not find user with username '${userInDatabase}'`);
@@ -58,6 +83,7 @@
 		const credId = userExist.credential_id;
 		const authUser = await auth.signIn(credId);
 		loggedIn.textContent = `Signed in as ${authUser.username} (credential id: ${authUser.credential_id}).`;	
+		loggedIn.classList.remove("hidden"); 
 	});
 </script>
 
@@ -74,4 +100,7 @@
 		display: block;
 		margin: 1em 0;
 	}
+	.hidden {
+        display: none;
+    }
 </style>
