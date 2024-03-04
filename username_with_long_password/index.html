@@ -4,45 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>username_with_long_password</title>
+    <link rel="stylesheet" href="username_long_password.css">
 </head>
 <body>
-    <form onsubmit="event.preventDefault()" >
-        <div class="container">
+    <div class="container" id="registrationContainer">
+        <form id="registrationForm" onsubmit="event.preventDefault()">
             <h2>Register</h2>
-            <label for="usernameReg"><b>Username</b></label>
-            <input type="text" placeholder="Choose a Username" id="usernameReg" required>
-            
-            <br>
+            <label for="reg_fname"><b>First Name</b></label>
+            <input type="text" placeholder="Enter Your First Name" name="reg_fname" required>
+
+            <label for="reg_lname"><b>Last Name</b></label>
+            <input type="text" placeholder="Enter Your Last Name" name="reg_lname" required>
+
+            <label for="reg_pnum"><b>Personal Number</b></label>
+            <input type="text" placeholder="Enter Your Personal Number" name="reg_pnum" required>
+
+            <label for="usernameReg"><b>Email</b></label>
+            <input type="email" placeholder="Enter Your Email" name="usernameReg" id="usernameReg" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address.">
 
             <label for="passwordReg"><b>Password</b></label>
-            <input type="password" placeholder="Choose a Password" id="passwordReg" required>
+            <input type="password" placeholder="Choose a Password" name="passwordReg" id="passwordReg" required>
 
-            <br>
-
-            <button id="register">Register</button>
-        </div>
-    </form>
+            <button type="submit" id="register">Register</button>
+        </form>
+    </div>
 
     <br>
 
-    <form id="loginForm" onsubmit="event.preventDefault();">
-        <div class="container">
+    <!-- Login Form -->
+    <div class="container hidden" id="loginContainer">
+        <form id="loginForm" onsubmit="event.preventDefault();">
             <h2>Login</h2>
-            <label for="usernameLogIn"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" id="usernameLogIn" required>
+            <label for="usernameLogIn"><b>Email</b></label>
+            <input type="text" placeholder="Enter email" name="usernameLogIn" id="usernameLogIn" required>
 
             <br>
         
             <label for="passwordLogIn"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" id="passwordLogIn" required>
+            <input type="password" placeholder="Enter Password" name="passwordLogIn" id="passwordLogIn" required>
 
             <br>
         
-            <button id="login">Login</button>
-        </div>
-    </form>
-
-    <p id="isLoggedIn">Not signed in.</p>
+            <button type="submit" id="login">Login</button>
+        
+        </form>
+    </div>
+    <p id="isLoggedIn" class="hidden"></p>
+    <p id="isLoggedInInfo" class="hidden">Not signed in.</p>
 
     <br>
 
@@ -65,7 +73,10 @@
 
         import API from "./api.js"
 
+        let users = [];
+
         const loggedIn = document.getElementById("isLoggedIn");
+        const loggedInInfo = document.getElementById("isLoggedInInfo");
 
         let registerBtn = document.getElementById("register")
         let usernameInp = document.getElementById("usernameReg")
@@ -87,8 +98,8 @@
             let username = usernameInp.value
             let password = passwordInp.value
 
-            if(password.length < 12) {
-                alert("Password must be at least 12 characters long.");
+            if(password.length < 14) {
+                alert("Password must be at least 14 characters long.");
                 return false;
             }
 
@@ -138,6 +149,20 @@
             console.log(publicJson)
 
             API.registerUser(publicJson, wrappedMKJson, userProfile)
+
+            let firstName = document.forms["registrationForm"]["reg_fname"].value;
+            let lastName = document.forms["registrationForm"]["reg_lname"].value
+            let personalNumber = document.forms["registrationForm"]["reg_pnum"].value
+
+            users.push({username: username, password: password, firstName: firstName, lastName: lastName, personalNumber: personalNumber});
+            alert("Registration successful!");
+
+            // Hide registration form and show login form
+            registrationContainer.classList.add("hidden");
+            loginContainer.classList.remove("hidden");
+
+            document.forms["registrationForm"].reset();
+
         })
 
         loginBtn.addEventListener('click', async () => {
@@ -171,26 +196,24 @@
             console.log('profile decripted', profile)
 
             loggedIn.textContent = `Signed in as ${profile}!`;
+
+            let userFound = users.find(user => user.username === username && user.password === password);
+            if(userFound) {
+                alert("Login successful! Welcome " + userFound.firstName);
+                loginContainer.classList.add("hidden");
+                console.log("Login successful");
+                loggedInInfo.textContent = `Login successful! Welcome ${userFound.firstName} ${userFound.lastName}. Your Personal Number is ${userFound.personalNumber}.`;
+                loggedInInfo.classList.remove("hidden");
+            } else {
+                alert("Invalid email or password.");
+                loggedInInfo.textContent = `Email or Password invalid, try again.`;
+                loggedInInfo.classList.remove("hidden");
+            }
         })
 
 
     </script>
 
 </body>
-
-<style>
-    body {
-        width: 80%;
-        margin: auto;
-    }
-    button, input {
-        display: block;
-        margin: -1;
-    }
-        input[type="submit"] {
-        display: block;
-        margin: 1em 0;
-    }
-</style>
 
 </html>
