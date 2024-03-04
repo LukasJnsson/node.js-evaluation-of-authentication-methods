@@ -88,19 +88,66 @@
 </script>
 
 <style>
-	body {
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         width: 80%;
-        margin: auto;
-	}
-	button, input {
-		display: block;
-        margin: -1;
-	}
-		input[type="submit"] {
-		display: block;
-		margin: 1em 0;
-	}
-	.hidden {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        color: #333;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    input, button {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    input:focus, button:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    button {
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        font-weight: bold;
+        border: none;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    label {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    #isLoggedIn {
+        font-size: 16px;
+        color: green;
+        margin-top: 20px;
+    }
+
+    #isLoggedIn.hidden {
         display: none;
     }
 </style>
