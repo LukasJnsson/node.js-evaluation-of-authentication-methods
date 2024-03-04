@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Username With Long Password</title>
+    <title>Passkeys</title>
 </head>
 <body>
-    <h1>Scenario 2</h1>
-    <h2>Username With Long Password. Password with 14 characters.</h2>
+    <h1>Scenario 4</h1>
+    <h2>Passkeys</h2>
     <h4>Information:</h4>
-    <p>In this scenario, you will engage with an enhanced security login system that requires a longer password for authentication. 
-    This method builds on the traditional username and password approach by enforcing a minimum password length of 14 characters. 
-    The goal is to increase security by making 
-    passwords harder to guess or crack, protecting users' accounts and sensitive information more effectively.
+    <p>
+        In this scenario, you will explore the latest approach of authentication using only a passkey, 
+        with no username or password required. This method represents a secure way by relying on a unique 
+        digital key that verifies your identity without traditional credentials.
+
+        This approach enhances security by eliminating the vulnerabilities associated with password-based systems, 
+        such as phishing and brute force attacks.
     </p>
 
     <h4>Task:</h4>
     <p>
-        Enter your email and password into the respective fields, these credentials do not have to be real you can make them up
-        if you prefer that. Make sure that you remember the credentials after registring. Then login using the crendentials.
-        Click the "Login" button to complete the authentication process.
+        Register using the phone provided by the researchers. After registring log in using the phone.
+        Consider the experience of logging in without needing to enter any credentials manually.
     </p>
 
     <p>You can now decide if you want the website to save your information.</p>
@@ -45,10 +47,11 @@
 
     <script>
         function redirectToIndex() {
-            window.location.href = 'index.html';
+            window.location.href = 'http://localhost:3000/';
         }
     </script>
 </body>
+</html>
 
 <style>
     body {
@@ -85,4 +88,3 @@
         background-color: #0056b3;
     }
 </style>
-</html>

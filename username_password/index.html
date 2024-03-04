@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>username_password</title>
+    <title>Username And Password</title>
     <link rel="stylesheet" href="username_password.css">
 </head>
 <body>
-    <!-- Registration Form -->
     <div class="container" id="registrationContainer">
         <form id="registrationForm" onsubmit="event.preventDefault(); registerUser();">
                 <h2>Register</h2>
@@ -30,7 +29,6 @@
         </form>
     </div>
 
-    <!-- Login Form -->
     <div class="container hidden" id="loginContainer">
         <form id="loginForm" onsubmit="event.preventDefault(); logInUser();">
             <h2>Login</h2>
@@ -52,7 +50,7 @@
     <p id="isLoggedIn" class="hidden">Not signed in.</p>
 
     <script>
-        let users = []
+        const users = [];
         const loggedIn = document.getElementById("isLoggedIn");
 
         function registerUser() {
@@ -78,40 +76,37 @@
             if(userExists) {
                 alert("Username already taken. Please choose another one.");
                 return false;
-            }
+            };
 
             users.push({username: username, password: password, firstName: firstName, lastName: lastName, personalNumber: personalNumber});
             alert("Registration successful!");
 
-            // Hide registration form and show login form
             registrationContainer.classList.add("hidden");
             loginContainer.classList.remove("hidden");
-
             document.forms["registrationForm"].reset();
-
-            console.log(users)
-
-        }
+        };
 
         function logInUser() {
             let username = document.forms["loginForm"]["login_uname"].value;
             let password = document.forms["loginForm"]["login_psw"].value;
 
             let userFound = users.find(user => user.username === username && user.password === password);
-            if(userFound) {
+        
+            if (userFound) {
                 alert("Login successful! Welcome " + userFound.firstName);
                 loginContainer.classList.add("hidden");
-                console.log("Login successful");
+                loggedIn.classList.remove("hidden");
                 loggedIn.textContent = `Login successful! Welcome ${userFound.firstName} ${userFound.lastName}. Your Personal Number is ${userFound.personalNumber}.`;
-                loggedIn.classList.remove("hidden");
-            } else {
-                alert("Invalid email or password.");
-                loggedIn.textContent = `Email or Password invalid, try again.`;
-                loggedIn.classList.remove("hidden");
             }
-        }
+            else {
+                alert("Invalid email or password.");
+                loggedIn.classList.remove("hidden");
+                loggedIn.textContent = `Email or Password invalid, try again.`;
+            };
+        };
     </script>
 </body>
+</html>
 
 <style>
     body {
@@ -127,4 +122,3 @@
         margin: 1em 0;
     }
 </style>
-</html>

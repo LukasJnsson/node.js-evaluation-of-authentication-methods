@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>username_with_long_password</title>
+    <title>Username With Long Password</title>
     <link rel="stylesheet" href="username_long_password.css">
 </head>
 <body>
@@ -31,7 +31,6 @@
 
     <br>
 
-    <!-- Login Form -->
     <div class="container hidden" id="loginContainer">
         <form id="loginForm" onsubmit="event.preventDefault();">
             <h2>Login</h2>
@@ -94,7 +93,6 @@
         let MK
 
         registerBtn.addEventListener('click', async () => {
-            // use the password to derive an AES key
             let username = usernameInp.value
             let password = passwordInp.value
 
@@ -128,7 +126,7 @@
             console.log(aeskey)
 
             console.log('exporting wrapped master key ...')
-            //now we encrypt the public, the private and the master keys with this derived key
+
             let wrapped = await wrapKey(masterKey, aeskey)
             let wrappedMKJson = {
                 key: bytesToString(wrapped.wrappedKey),
@@ -137,9 +135,7 @@
             console.log(wrappedMKJson)
 
             console.log('generating public and private keys ...')
-            // it is important to combine both uname and pwd 
-            // else one can find a pwd by trying to login with all sorts of combinations until hitting one
-            // TODO: maybe more clever ways of combining these 2 together?
+
             let seed = username + password
             let pp = await generatePrivatePublicKeys(seed)
             console.log(pp)
@@ -157,12 +153,9 @@
             users.push({username: username, password: password, firstName: firstName, lastName: lastName, personalNumber: personalNumber});
             alert("Registration successful!");
 
-            // Hide registration form and show login form
             registrationContainer.classList.add("hidden");
             loginContainer.classList.remove("hidden");
-
             document.forms["registrationForm"].reset();
-
         })
 
         loginBtn.addEventListener('click', async () => {
@@ -178,7 +171,7 @@
             console.log('logging in ...')
             let publicJson = await extractKey(pp.publicKey)
             let challenge = API.loginStartChallenge(publicJson)
-            // sign
+
             let signature = await sign(pp.privateKey, challenge)
             let profileEncr = await API.completeChallenge(challenge, signature)
             console.log('logged in!', profileEncr)
@@ -210,10 +203,6 @@
                 loggedInInfo.classList.remove("hidden");
             }
         })
-
-
     </script>
-
 </body>
-
 </html>

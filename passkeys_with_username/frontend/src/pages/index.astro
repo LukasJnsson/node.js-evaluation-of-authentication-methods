@@ -5,10 +5,9 @@
       <title>node.js-end-to-end-encrypted-platform</title>
       <meta name="generator" content={Astro.generator} />
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	  <title>passkeys_with_username</title>
+	  <title>Passkeys with username</title>
 </head>
 <body>
-    
     <form id="signup">
 		<h2>Sign up</h2>
         <label for="username">Email</label>
@@ -25,6 +24,7 @@
 
         <button>Sign up with passkeys</button>
     </form>
+
     <form id="login" class="hidden">
 	    <h2>Sign in</h2>
 		<input id="usernameLogin" name="usernameLogin" /><br />
@@ -37,13 +37,13 @@
 
 <script>
 	import auth from "../authenticate";
+
 	const users = [];
 
 	const signup = document.getElementById("signup");
 	const login = document.getElementById("login");
 	const loggedIn = document.getElementById("isLoggedIn");
 	const usernameLogin = document.getElementById("usernameLogin");
-	const fName = 
 
 	signup.addEventListener("submit", async (e) => {
 		e.preventDefault();
@@ -51,17 +51,14 @@
 		const username = formData.get("username");
 		if (typeof username !== "string" || username.length < 1) return;
 		const user = await auth.signUp(username);
-		loggedIn.textContent = `Signed in as ${user.username} (credential id: ${user.credential_id}).`;
 
 		let firstName = document.forms["signup"]["reg_fname"].value;
 		let lastName = document.forms["signup"]["reg_lname"].value
 		let personalNumber = document.forms["signup"]["reg_pnum"].value
-
 		users.push({username: username, firstName: firstName, lastName: lastName, personalNumber: personalNumber});
 
-		// Show the login form once registration is successful
-		signup.classList.add("hidden"); // Hide the signup form
-		login.classList.remove("hidden"); // Show the login form
+		signup.classList.add("hidden");
+		login.classList.remove("hidden"); 
 	});
 
 	login.addEventListener("submit", async (e) => {
@@ -73,17 +70,17 @@
 		let userExist;
 		if (user) {
 			userExist = JSON.parse(user);
-			loggedIn.textContent = users;
 		}
 		if(!userExist) {
 			alert(`Could not find user with username '${userInDatabase}'`);
 			loggedIn.textContent = `Could not find user with username '${userInDatabase}'`
 			return;
 		}
+    
 		const credId = userExist.credential_id;
 		const authUser = await auth.signIn(credId);
+        loggedIn.classList.remove("hidden"); 
 		loggedIn.textContent = `Signed in as ${authUser.username} (credential id: ${authUser.credential_id}).`;	
-		loggedIn.classList.remove("hidden"); 
 	});
 </script>
 
