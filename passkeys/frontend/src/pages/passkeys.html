@@ -8,7 +8,22 @@
 <body>
     <h1>Scenario 4</h1>
     <h2>Passkeys</h2>
-    <p>Lorum ipsum</p>
+    <h4>Information:</h4>
+    <p>
+        In this scenario, you will explore the latest approach of authentication using only a passkey, 
+        with no username or password required. This method represents a secure way by relying on a unique 
+        digital key that verifies your identity without traditional credentials.
+
+        This approach enhances security by eliminating the vulnerabilities associated with password-based systems, 
+        such as phishing and brute force attacks.
+    </p>
+
+    <h4>Task:</h4>
+    <p>
+        Register using the phone provided by the researchers. After registring log in using the phone.
+        Consider the experience of logging in without needing to enter any credentials manually.
+    </p>
+
     <p>You can now decide if you want the website to save your information.</p>
     <p>Keep in mind that if you do not allow it to save the information you will not be able to recover your password in the future</p>
 
@@ -26,6 +41,7 @@
         </div>
     </fieldset>
 
+    <p>The researchers removes all credentials after the experiment is done.</p>
     <h3>Click the following button to continue</h3>
     <button onclick="redirectToIndex()">Continue</button>
 
@@ -45,6 +61,8 @@
         background-color: white;
         height: 100vh;
         text-align: center;
+        width: 80%;
+        margin: auto;
     }
     fieldset {
         width: 30%;
