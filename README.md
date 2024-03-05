@@ -1,6 +1,6 @@
 <div align="center">
 
-**`End to end encrypted platform with Node.js and Express`**
+**`<title>`**
 
 ***`Skills`***
 <div align="center">
@@ -8,7 +8,7 @@
 <img alt="Express" width="40px" style="padding-right:10px;" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original-wordmark.svg"/>
 <br/>
 
-***`The Web Authentication API requires that the calling web application is served over HTTPS (except for localhost). In order to ensure that the application runs over HTTPS or localhost Astro is used because it is required by webauth configuration.`***
+***`<text>`***
 
 ## Frontend
 ```bash
