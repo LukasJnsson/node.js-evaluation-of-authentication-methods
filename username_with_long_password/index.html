@@ -198,7 +198,7 @@
                 alert("Login successful! Welcome " + userFound.firstName);
                 loginContainer.classList.add("hidden");
                 console.log("Login successful");
-                loggedInInfo.textContent = `Login successful! Welcome ${userFound.firstName} ${userFound.lastName}. Your Personal Number is ${userFound.personalNumber}.`;
+                loggedInInfo.textContent = `Login successful! Welcome ${userFound.firstName} ${userFound.lastName}. Your deepest secret is ${userFound.personalNumber}.`;
                 loggedInInfo.classList.remove("hidden");
             } else {
                 alert("Invalid email or password.");

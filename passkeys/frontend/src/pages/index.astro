@@ -11,13 +11,13 @@
     <form id="signup">
 		<h2>Sign up</h2>
         <label for="reg_fname"><b>First Name</b></label>
-        <input type="text" placeholder="Enter First Name" name="reg_fname" required>
+        <input type="text" placeholder="Enter First Name" name="reg_fname" id="reg_fname" required>
 
         <label for="reg_lname"><b>Last Name</b></label>
-        <input type="text" placeholder="Enter Last Name" name="reg_lname" required>
+        <input type="text" placeholder="Enter Last Name" name="reg_lname" id="reg_lname" required>
 
         <label for="reg_pnum"><b>Deepest secret</b></label>
-        <input type="text" placeholder="Enter a secret about you" name="reg_pnum" required>
+        <input type="text" placeholder="Enter a secret about you" name="reg_pnum" id="reg_pnum" required>
         <label for="username">Email</label>
         <input id="username" placeholder="Enter Email" name="username" id="username" /><br />
         <button>Sign up with passkeys</button>
@@ -45,9 +45,12 @@
 		e.preventDefault();
 		const formData = new FormData(signup);
 		const username = formData.get("username");
+        const firstName = formData.get("reg_fname");
+        const lastName = formData.get("reg_lname");
+        const secret = formData.get("reg_pnum");
 		if (typeof username !== "string" || username.length < 1) return;
 		const user = await auth.signUp(username);
-		users.push({username: username});
+		users.push({username: username, firstName: firstName, lastName: lastName, secret: secret});
 		signup.classList.add("hidden");
 		login.classList.remove("hidden");
 	});
@@ -55,8 +58,10 @@
 	login.addEventListener("submit", async (e) => {
 		e.preventDefault();
 		const user = await auth.signIn();
-		loggedIn.classList.remove("hidden");
-		loggedIn.textContent = `Signed in as ${user.username} (credential id: ${user.credential_id}).`;
+        const filteredUser = users.find(u => u.username === user.username);
+        loggedIn.classList.remove("hidden");
+        loggedIn.textContent = 
+        `Signed in as ${user.username} Name: ${filteredUser.firstName} ${filteredUser.lastName}, Secret: ${filteredUser.secret}`;
 	});
 </script>
 
