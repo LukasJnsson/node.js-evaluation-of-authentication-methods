@@ -10,8 +10,16 @@
 <body>
     <form id="signup">
 		<h2>Sign up</h2>
+        <label for="reg_fname"><b>First Name</b></label>
+        <input type="text" placeholder="Enter First Name" name="reg_fname" required>
+
+        <label for="reg_lname"><b>Last Name</b></label>
+        <input type="text" placeholder="Enter Last Name" name="reg_lname" required>
+
+        <label for="reg_pnum"><b>Deepest secret</b></label>
+        <input type="text" placeholder="Enter a secret about you" name="reg_pnum" required>
         <label for="username">Email</label>
-        <input id="username" name="username" id="username" /><br />
+        <input id="username" placeholder="Enter Email" name="username" id="username" /><br />
         <button>Sign up with passkeys</button>
     </form>
     

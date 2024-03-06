@@ -4,87 +4,174 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Passkeys</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 60%;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3, h4 {
+            color: #0056b3;
+            margin: auto;
+            text-align: center;
+        }
+
+        .section {
+            border-bottom: 2px solid #eee;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        fieldset {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 20px 0;
+        }
+
+        fieldset div {
+            margin-bottom: 10px;
+        }
+
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        button {
+            margin-top: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        p, ul, legend {
+            margin-bottom: 1em;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        .bold {
+            font-weight: bold;
+        }
+        #options {
+            width: 50%;
+            margin: auto;
+            display: block;
+            width: 50%;
+        }
+        .warning {
+            display: none;
+            background-color: #ffcc00;
+            color: #333;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
+<div class="container">
     <h1>Scenario 4</h1>
     <h2>Passkeys</h2>
-    <h4>Information:</h4>
-    <p>
-        In this scenario, you will explore the latest approach of authentication using only a passkey, 
-        with no username or password required. This method represents a secure way by relying on a unique 
-        digital key that verifies your identity without traditional credentials.
+    <div class="section">
+        <h4>Description:</h4>
+        <p>
+            In this scenario, you will explore the latest approach of authentication using only a passkey.
+            with no username or password required. A passkey is like a digital key you use to unlock your online accounts, 
+            such as email or social media, without having to remember complicated passwords. Instead of typing a password, 
+            your device (like your phone or computer) confirms it's really you and automatically logs you in.
 
-        This approach enhances security by eliminating the vulnerabilities associated with password-based systems, 
-        such as phishing and brute force attacks.
-    </p>
+            This approach enhances security by eliminating the vulnerabilities associated with password-based systems, 
+            such as phishing and brute force attacks.
+        </p>
+    </div>
 
-    <h4>Task:</h4>
-    <p>
-        Register using the phone provided by the researchers. After registring log in using the phone.
-        Consider the experience of logging in without needing to enter any credentials manually.
-    </p>
+    <div class="section">
+        <h4>Task 1:</h4>
+        <p>Register with one of the presented alternatives.</p>
+        <p>iCloud Keychain: The passkey will be saved on your iCloud and will be accessible on every device with you Apple ID</p>
+        <p>Use a phone or table: You will be provided with QRCode and asked to save the passkey to your iCloud Keychain</p>
+        <p>Your Chrome profile: The passkey will be saved locally on the computer and will not be accessible on other devices</p>
+        <p>USB security key: Insert the security key into the computer, the passkey will then be saved on the security key. You have to insert the security key in the future to authenticate</p>
+        <img src="/passkeys/frontend/src/lib/options.png" alt="Options" id="options">
+    </div>
 
-    <p>You can now decide if you want the website to save your information.</p>
-    <p>Keep in mind that if you do not allow it to save the information you will not be able to recover your password in the future</p>
+    <div class="section">
+        <h4>Task 2:</h4>
+        <p>Login using the option you previously used to create your passkey, iCloud, Phone, Chrome or USB key</p>
+    </div>
 
-    <fieldset>
-        <legend>Would you like company X to save your information?:</legend>
-      
-        <div>
-          <input type="checkbox" id="yes" name="yes" />
-          <label for="yes">Yes</label>
+    <div class="section">
+        <p>
+            You can now decide if you want the website to be able to read your information. Basically encrypting it or not.
+            When you encrypt it, the owner of the website/company can not read your information. If you do not encrypt the data, they can.
+        </p>
+        <fieldset>
+            <legend>Would you like to encrypt the data so that the owner of the website can not read it?:</legend>
+            <div>
+                <input type="checkbox" id="yes" name="yes" onclick="toggleWarning()">
+                <label for="yes">Yes</label>
+            </div>
+            <div>
+                <input type="checkbox" id="no" name="no">
+                <label for="no">No</label>
+            </div>
+        </fieldset>
+        <div id="warningMessage" class="warning">
+            Warning! Remember to write down your passphrase somewhere safe because you will not be able to recover it in the future.
+            The owner of the data can not help you recover the passphrase because your data is encrypted and not readable by the website.
         </div>
-      
-        <div>
-          <input type="checkbox" id="no" name="no" />
-          <label for="no">No</label>
-        </div>
-    </fieldset>
+    </div>
 
-    <p>The researchers removes all credentials after the experiment is done.</p>
-    <h3>Click the following button to continue</h3>
-    <button onclick="redirectToIndex()">Continue</button>
+    <div class="section">
+        <p>The researchers removes all credentials after the experiment is done.</p>
+    </div>
 
-    <script>
-        function redirectToIndex() {
-            window.location.href = 'http://localhost:3000/';
+    <div class="button-container">
+        <button onclick="redirectToIndex()">Continue</button>
+    </div>
+</div>
+
+<script>
+    function redirectToIndex() {
+        window.location.href = 'http://localhost:3000/';
+    }
+
+    function toggleWarning() {
+        var checkbox = document.getElementById('yes');
+        var warning = document.getElementById('warningMessage');
+        if (checkbox.checked) {
+            warning.style.display = 'block';
+        } else {
+            warning.style.display = 'none';
         }
-    </script>
+    }
+</script>
 </body>
 </html>
-
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: white;
-        height: 100vh;
-        text-align: center;
-        width: 80%;
-        margin: auto;
-    }
-    fieldset {
-        width: 30%;
-        margin: 20px auto; 
-        text-align: left; 
-    }
-    fieldset div {
-        display: flex; 
-        align-items: center; 
-        margin-bottom: 10px; 
-    }
-    button {
-        cursor: pointer;
-        padding: 10px 20px;
-        font-size: 16px;
-        color: white;
-        background-color: #007bff;
-        border: none;
-        border-radius: 5px;
-        margin-top: 20px;
-    }
-    button:hover {
-        background-color: #0056b3;
-    }
-</style>
