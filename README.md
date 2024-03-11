@@ -1,6 +1,6 @@
 <div align="center">
 
-**`<title>`**
+**`Evaluation of the usability of passkey- and non-passkey based authentication with Node.js, Express and Web Authentication API`**
 
 ***`Skills`***
 <div align="center">
@@ -9,17 +9,3 @@
 <br/>
 
 ***`<text>`***
-
-## Frontend
-```bash
-cd frontend
-npm i
-npm start
-```
-
-## Backend
-```bash
-cd backend
-npm i
-npm start
-```
