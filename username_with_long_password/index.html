@@ -162,50 +162,41 @@
         })
 
         loginBtn.addEventListener('click', async () => {
-            let password = passwordLogIn.value
-            let username = usernameLogIn.value
-            console.log('uname: ' + username + ', pwd: ' + password)
+        let password = passwordLogIn.value;
+        let username = usernameLogIn.value;
 
-            console.log('generating keys ...')
-            let aeskey = await getKeyFromPassword(password, username)
-            let seed = username + password
-            let pp = await generatePrivatePublicKeys(seed)
+        try {
+            let aeskey = await getKeyFromPassword(password, username);
+            let seed = username + password;
+            let pp = await generatePrivatePublicKeys(seed);
 
-            console.log('logging in ...')
-            let publicJson = await extractKey(pp.publicKey)
-            let challenge = API.loginStartChallenge(publicJson)
+            let publicJson = await extractKey(pp.publicKey);
+            let challenge = await API.loginStartChallenge(publicJson);
 
-            let signature = await sign(pp.privateKey, challenge)
-            let profileEncr = await API.completeChallenge(challenge, signature)
-            console.log('logged in!', profileEncr)
+            let signature = await sign(pp.privateKey, challenge);
+            let profileEncr = await API.completeChallenge(challenge, signature);
 
-            console.log('recovering MK ...')
-            let wrappedMKJson = await API.getMasterKey()
-            let recMK = stringToBytes(wrappedMKJson.key)
-            let iv = stringToBytes(wrappedMKJson.iv)
+            let wrappedMKJson = await API.getMasterKey();
+            let recMK = stringToBytes(wrappedMKJson.key);
+            let iv = stringToBytes(wrappedMKJson.iv);
 
-            MK = await unwrapKey(recMK, iv, aeskey)
-            console.log('master key recovered', MK)
-
-            console.log('decripting profile ...')
-            let profile = await decrypt(profileEncr.encrypted.data, MK, profileEncr.encrypted.iv)
-            console.log('profile decripted', profile)
-
-            loggedIn.textContent = `Signed in as ${profile}!`;
+            let MK = await unwrapKey(recMK, iv, aeskey);
+            let profile = await decrypt(profileEncr.encrypted.data, MK, profileEncr.encrypted.iv);
 
             let userFound = users.find(user => user.username === username && user.password === password);
             if(userFound) {
                 alert("Login successful! Welcome " + userFound.firstName);
                 loginContainer.classList.add("hidden");
-                console.log("Login successful");
                 loggedInInfo.textContent = `Login successful! Welcome ${userFound.firstName} ${userFound.lastName}. Your deepest secret is ${userFound.personalNumber}.`;
                 loggedInInfo.classList.remove("hidden");
             } else {
-                alert("Invalid email or password.");
-                loggedInInfo.textContent = `Email or Password invalid, try again.`;
-                loggedInInfo.classList.remove("hidden");
+                throw new Error("Invalid email or password.");
             }
-        })
+        } catch (error) {
+            console.error("Login error:", error);
+            alert("Invalid email or password.");
+        }
+    });
     </script>
 </body>
 </html>
