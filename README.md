@@ -1,6 +1,6 @@
 <div align="center">
 
-**`Evaluation of the usability of passkey- and non-passkey based authentication with Node.js, Express and Web Authentication API`**
+**`Computer and Information Science: Degree Thesis (da462a) course, evaluation of the usability of passkey- and non-passkey based authentication with Node.js, Express and Web Authentication API`**
 
 ***`Skills`***
 <div align="center">
