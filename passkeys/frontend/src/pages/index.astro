@@ -51,6 +51,7 @@
 		if (typeof username !== "string" || username.length < 1) return;
 		const user = await auth.signUp(username);
 		users.push({username: username, firstName: firstName, lastName: lastName, secret: secret});
+        alert("Registration Successful");
 		signup.classList.add("hidden");
 		login.classList.remove("hidden");
 	});
