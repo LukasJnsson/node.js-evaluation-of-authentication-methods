@@ -34,11 +34,11 @@ userRouter.get('/:id', (req, res) => {
 
 userRouter.post('/', (req, res) => {
     try {
-        const newData = req.body;
+        const newUser = req.body;
         const user = {
-            credential_id: newData.credential_id,
-            username: newData.username,
-            public_key: newData.public_key,
+            credential_id: newUser.credential_id,
+            username: newUser.username,
+            public_key: newUser.public_key,
         }
         const response = db.addUser(user);
         res.status(201).json(response);

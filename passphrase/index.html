@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Username With Long Password</title>
-    <link rel="stylesheet" href="username_long_password.css">
+    <title>Passphrase</title>
+    <link rel="stylesheet" href="passphrase.css">
 </head>
 <body>
     <div class="container" id="registrationContainer">
@@ -31,48 +31,25 @@
             <button type="submit" id="register">Register</button>
         </form>
     </div>
-
     <br>
-
     <div class="container hidden" id="loginContainer">
         <form id="loginForm" onsubmit="event.preventDefault();">
             <h2>Login</h2>
             <label for="usernameLogIn"><b>Email</b></label>
             <input type="text" placeholder="Enter email" name="usernameLogIn" id="usernameLogIn" required>
-
             <br>
-        
             <label for="passwordLogIn"><b>Passphrase</b></label>
             <input type="password" placeholder="Enter Passphrase" name="passwordLogIn" id="passwordLogIn" required>
-
             <br>
-        
             <button type="submit" id="login">Login</button>
-        
         </form>
     </div>
     <p id="isLoggedIn" class="hidden"></p>
     <p id="isLoggedInInfo" class="hidden">Not signed in.</p>
-
     <br>
-
     <script src="https://cdn.jsdelivr.net/npm/node-forge@1.3.1/dist/forge.min.js"></script>
-
     <script type="module">
-        import {
-            generateMasterKey,
-            generatePrivatePublicKeys,
-            getKeyFromPassword,
-            wrapKey,
-            unwrapKey,
-            extractKey,
-            sign,
-            encrypt,
-            decrypt,
-            bytesToString,
-            stringToBytes
-        } from "./crypto.js"
-
+        import crypto from "./crypto.js"
         import API from "./api.js"
 
         let users = [];
@@ -80,20 +57,20 @@
         const loggedIn = document.getElementById("isLoggedIn");
         const loggedInInfo = document.getElementById("isLoggedInInfo");
 
-        let registerBtn = document.getElementById("register")
-        let usernameInp = document.getElementById("usernameReg")
-        let passwordInp = document.getElementById("passwordReg")
+        let registerBtn = document.getElementById("register");
+        let usernameInp = document.getElementById("usernameReg");
+        let passwordInp = document.getElementById("passwordReg");
 
-        let usernameLogIn = document.getElementById("usernameLogIn")
-        let passwordLogIn = document.getElementById("passwordLogIn")
+        let usernameLogIn = document.getElementById("usernameLogIn");
+        let passwordLogIn = document.getElementById("passwordLogIn");
 
-        let loginBtn = document.getElementById("login")
+        let loginBtn = document.getElementById("login");
 
-        let messageInp = document.getElementById("message")
-        let encryptBtn = document.getElementById("encrypt")
-        let decryptBtn = document.getElementById("decrypt")
+        let messageInp = document.getElementById("message");
+        let encryptBtn = document.getElementById("encrypt");
+        let decryptBtn = document.getElementById("decrypt");
 
-        let MK
+        let MK;
 
         registerBtn.addEventListener('click', async () => {
             let username = usernameInp.value
@@ -102,51 +79,28 @@
             if(password.length < 14) {
                 alert("Password must be at least 14 characters long.");
                 return false;
-            }
+            };
+            let masterKey = await crypto.generateMasterKey();
 
-            console.log('Registering uname: ' + username + ', pwd: ' + password)
-
-            console.log('generating master key ...')
-            let masterKey = await generateMasterKey()
-            console.log(masterKey)
-
-            let userProfile = {
-            }
-            console.log('encrypting the user profile ...')
-            const { cipher, iv } = await encrypt(JSON.stringify({
-                username
-            }), masterKey)
+            let userProfile = {};
+            const { cipher, iv } = await crypto.encrypt(JSON.stringify({ username }), masterKey);
 
             userProfile.encrypted = {
                 data: cipher,
                 iv: iv
-            }
-            console.log(userProfile)
+            };
 
-            console.log('deriving a symmetric key ...')
+            let aeskey = await crypto.getKeyFromPassword(password, username);
 
-            let aeskey = await getKeyFromPassword(password, username)
-            console.log(aeskey)
-
-            console.log('exporting wrapped master key ...')
-
-            let wrapped = await wrapKey(masterKey, aeskey)
+            let wrapped = await crypto.wrapKey(masterKey, aeskey)
             let wrappedMKJson = {
-                key: bytesToString(wrapped.wrappedKey),
-                iv: bytesToString(wrapped.iv)
-            }
-            console.log(wrappedMKJson)
+                key: crypto.bytesToString(wrapped.wrappedKey),
+                iv: crypto.bytesToString(wrapped.iv)
+            };
 
-            console.log('generating public and private keys ...')
-
-            let seed = username + password
-            let pp = await generatePrivatePublicKeys(seed)
-            console.log(pp)
-
-            console.log('exporting public key  ...')
-            let publicJson = await extractKey(pp.publicKey)
-            console.log(publicJson)
-
+            let seed = username + password;
+            let pp = await crypto.generatePrivatePublicKeys(seed);
+            let publicJson = await crypto.extractKey(pp.publicKey)
             API.registerUser(publicJson, wrappedMKJson, userProfile)
 
             let firstName = document.forms["registrationForm"]["reg_fname"].value;
@@ -155,7 +109,6 @@
 
             users.push({username: username, password: password, firstName: firstName, lastName: lastName, personalNumber: personalNumber});
             alert("Registration successful!");
-
             registrationContainer.classList.add("hidden");
             loginContainer.classList.remove("hidden");
             document.forms["registrationForm"].reset();
@@ -166,22 +119,22 @@
         let username = usernameLogIn.value;
 
         try {
-            let aeskey = await getKeyFromPassword(password, username);
+            let aeskey = await crypto.getKeyFromPassword(password, username);
             let seed = username + password;
-            let pp = await generatePrivatePublicKeys(seed);
+            let pp = await crypto.generatePrivatePublicKeys(seed);
 
-            let publicJson = await extractKey(pp.publicKey);
+            let publicJson = await crypto.extractKey(pp.publicKey);
             let challenge = await API.loginStartChallenge(publicJson);
 
-            let signature = await sign(pp.privateKey, challenge);
+            let signature = await crypto.sign(pp.privateKey, challenge);
             let profileEncr = await API.completeChallenge(challenge, signature);
 
             let wrappedMKJson = await API.getMasterKey();
-            let recMK = stringToBytes(wrappedMKJson.key);
-            let iv = stringToBytes(wrappedMKJson.iv);
+            let recMK = crypto.stringToBytes(wrappedMKJson.key);
+            let iv = crypto.stringToBytes(wrappedMKJson.iv);
 
-            let MK = await unwrapKey(recMK, iv, aeskey);
-            let profile = await decrypt(profileEncr.encrypted.data, MK, profileEncr.encrypted.iv);
+            let MK = await crypto.unwrapKey(recMK, iv, aeskey);
+            let profile = await crypto.decrypt(profileEncr.encrypted.data, MK, profileEncr.encrypted.iv);
 
             let userFound = users.find(user => user.username === username && user.password === password);
             if(userFound) {
@@ -193,7 +146,6 @@
                 throw new Error("Invalid email or password.");
             }
         } catch (error) {
-            console.error("Login error:", error);
             alert("Invalid email or password.");
         }
     });

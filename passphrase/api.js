@@ -1,3 +1,5 @@
+
+
 export default {
     loggedIn: false,
     pKey: undefined,
@@ -7,15 +9,7 @@ export default {
     challenge: '',
     lastMessage: undefined,
 
-
-    /**
-     * Registers a new user
-     * @param {*} publicKey 
-     * @param {*} masterKey 
-     * @param {*} userProfile 
-     */
     async registerUser (publicKey, masterKey, userProfile) {
-        console.log('API - registering a user')
         this.mKey = masterKey
         this.pKeyString = publicKey.n
         this.pKey = await window.crypto.subtle.importKey('jwk', publicKey, {
@@ -23,35 +17,15 @@ export default {
             hash: { name: 'SHA-256' }
         }, true, ['verify'])
         this.profile = userProfile
-
-        console.log('API - user registered')
     },
 
-    /**
-     * Starts a login challenge
-     * @param {*} publicKey 
-     * @returns 
-     */
     async loginStartChallenge (publicKey) {
-        console.log(this.pKeyString)
-        console.log(publicKey)
-        // find the user associated with this key
         if (this.pKeyString != publicKey.n) throw new Error('p key does not exist')
-
         this.challenge = 'random text'
-
         return this.challenge
     },
 
-    /**
-     * Finalises a login challenge
-     * @param {*} challenge 
-     * @param {*} signature 
-     * @returns 
-     */
     async completeChallenge (challenge, signature) {
-        // TODO: find the user associated to the challenge
-
         let encoder = new TextEncoder()
         let challengeBytes = encoder.encode(challenge)
 
@@ -82,10 +56,6 @@ export default {
         }
     },
 
-    /**
-     * Retrieves the encryption master key
-     * @returns 
-     */
     async getMasterKey () {
         if (!this.loggedIn) throw new Error('must be logged in!')
         return this.mKey
@@ -93,7 +63,6 @@ export default {
 
     async sendMessage (message, iv) {
         if (!this.loggedIn) throw new Error('must be logged in!')
-        // TODO: messages should be saved on a database
         return this.lastMessage = {
             message,
             iv
@@ -102,7 +71,6 @@ export default {
 
     async getMessage () {
         if (!this.loggedIn) throw new Error('must be logged in!')
-        // TODO: this should be converted in a full query of messages
         return this.lastMessage
     }
 }

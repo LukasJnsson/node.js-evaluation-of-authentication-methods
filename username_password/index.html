@@ -27,31 +27,23 @@
                 
                 <label for="login_psw_rpt"><b>Repeat password</b></label>
                 <input type="password" placeholder="Enter Password" name="login_psw_rpt" required>
-
                 <button type="submit">Register</button>
         </form>
     </div>
-
     <div class="container hidden" id="loginContainer">
         <form id="loginForm" onsubmit="event.preventDefault(); logInUser();">
             <h2>Login</h2>
             <label for="login_uname"><b>Email</b></label>
             <input type="text" placeholder="Enter email" name="login_uname" required>
-
             <br>
-        
             <label for="login_psw"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" name="login_psw" required>
-
             <br>
-        
             <button type="submit">Login</button>
         
         </form>
     </div>
-
     <p id="isLoggedIn" class="hidden">Not signed in.</p>
-
     <script>
         const users = [];
         const loggedIn = document.getElementById("isLoggedIn");
@@ -108,20 +100,19 @@
             };
         };
     </script>
+    <style>
+        body {
+            width: 80%;
+            margin: auto;
+        }
+        button, input {
+            display: block;
+            margin: -1;
+        }
+            input[type="submit"] {
+            display: block;
+            margin: 1em 0;
+        }
+    </style>
 </body>
 </html>
-
-<style>
-    body {
-        width: 80%;
-        margin: auto;
-    }
-    button, input {
-        display: block;
-        margin: -1;
-    }
-        input[type="submit"] {
-        display: block;
-        margin: 1em 0;
-    }
-</style>
