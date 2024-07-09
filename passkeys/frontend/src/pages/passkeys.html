@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passkeys</title>
+</head>
+<body>
+<div class="container">
+    <h1>Scenario 3</h1>
+    <h2>Passkeys</h2>
+    <div class="section">
+        <h4>Description:</h4>
+        <p>
+            In this scenario, you will explore the latest approach of authentication using only a "passkey"
+            with no password required. A passkey is a digital key that is saved on your own device,
+            Apple or Google account which is only accessible to you. This means that you do not have to enter
+            an email or password in order to login. Instead of typing a password,
+            your device (phone or computer) confirms it's really you and automatically signs you in with the passkey.
+            This approach enhances security by eliminating the vulnerabilities associated with password-based systems, 
+            such as phishing and brute force attacks because no one can access your passkey except from you.
+        </p>
+    </div>
+    <div class="section">
+        <h4>Task 1:</h4>
+        <p>Register with one of the presented alternatives.</p>
+        <p>iCloud Keychain: The passkey will be saved on your iCloud and will be accessible on every device with your Apple ID</p>
+        <p>Use a phone or table: You will be provided with QR code and asked to save the passkey to your iCloud Keychain</p>
+        <p>Your Chrome profile: The passkey will be saved locally on your computer in the Chrome browser and will not be accessible on other devices or browsers
+        meaning that you only use this passkey on this computer on the Chrome browser
+        </p>
+        <p>USB security key: Insert the security key into the computer, the passkey will then be saved on the security key. You have to insert the security key in the future to authenticate.
+        You can use this security key to login with the passkey from anywhere
+        </p>
+        <img src="/passkeys/frontend/src/lib/options.png" alt="Options" id="options">
+    </div>
+    <div class="section">
+        <h4>Task 2:</h4>
+        <p>Login using the option you previously used to create your passkey, iCloud, Phone, Chrome or USB key</p>
+    </div>
+    <div class="section">
+        <h3>Privacy Notice</h3>
+        <div class="section">
+            <p>
+                The information will not be encrypted. If you loose your passkey your account can not be recovered.
+                The researchers removes all credentials after the experiment is done.
+            </p>
+        </div>
+    </div>
+    <div class="button-container">
+        <button onclick="redirectToIndex()">Continue</button>
+    </div>
+</div>
+    <script>
+        function redirectToIndex() {
+            window.location.href = 'http://localhost:3000/';
+        }
+
+        function toggleWarning() {
+            var checkbox = document.getElementById('no');
+            var warning = document.getElementById('warningMessage');
+            if (checkbox.checked) {
+                warning.style.display = 'block';
+            } else {
+                warning.style.display = 'none';
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 60%;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3, h4 {
+            color: #0056b3;
+            margin: auto;
+            text-align: center;
+        }
+
+        .section {
+            border-bottom: 2px solid #eee;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        fieldset {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 20px 0;
+        }
+
+        fieldset div {
+            margin-bottom: 10px;
+        }
+
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        button {
+            margin-top: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        p, ul, legend {
+            margin-bottom: 1em;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        .bold {
+            font-weight: bold;
+        }
+        #options {
+            width: 50%;
+            margin: auto;
+            display: block;
+            width: 50%;
+        }
+        .warning {
+            display: none;
+            background-color: #ffcc00;
+            color: #333;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+</body>
+</html>

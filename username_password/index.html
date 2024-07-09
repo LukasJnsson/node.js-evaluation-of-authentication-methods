@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Username And Password</title>
+    <link rel="stylesheet" href="username_password.css">
+</head>
+<body>
+    <div class="container" id="registrationContainer">
+        <form id="registrationForm" onsubmit="event.preventDefault(); registerUser();">
+                <h2>Register</h2>
+                <label for="reg_fname"><b>First Name</b></label>
+                <input type="text" placeholder="Enter Your First Name" name="reg_fname" required>
+
+                <label for="reg_lname"><b>Last Name</b></label>
+                <input type="text" placeholder="Enter Your Last Name" name="reg_lname" required>
+
+                <label for="reg_pnum"><b>Deepest secret</b></label>
+                <input type="text" placeholder="Enter a secret about you" name="reg_pnum" required>
+
+                <label for="reg_email"><b>Email</b></label>
+                <input type="email" placeholder="Enter Your Email" name="reg_email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address.">
+
+                <label for="reg_psw"><b>Password</b></label>
+                <input type="password" placeholder="Choose a Password" name="reg_psw" required>
+                
+                <label for="login_psw_rpt"><b>Repeat password</b></label>
+                <input type="password" placeholder="Enter Password" name="login_psw_rpt" required>
+                <button type="submit">Register</button>
+        </form>
+    </div>
+    <div class="container hidden" id="loginContainer">
+        <form id="loginForm" onsubmit="event.preventDefault(); logInUser();">
+            <h2>Login</h2>
+            <label for="login_uname"><b>Email</b></label>
+            <input type="text" placeholder="Enter email" name="login_uname" required>
+            <br>
+            <label for="login_psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="login_psw" required>
+            <br>
+            <button type="submit">Login</button>
+        
+        </form>
+    </div>
+    <p id="isLoggedIn" class="hidden">Not signed in.</p>
+    <script>
+        const users = [];
+        const loggedIn = document.getElementById("isLoggedIn");
+
+        function registerUser() {
+            let username = document.forms["registrationForm"]["reg_email"].value;
+            let password = document.forms["registrationForm"]["reg_psw"].value;
+            let firstName = document.forms["registrationForm"]["reg_fname"].value;
+            let lastName = document.forms["registrationForm"]["reg_lname"].value
+            let personalNumber = document.forms["registrationForm"]["reg_pnum"].value
+
+            if(username.length < 3) {
+                alert("Username must be at least 5 characters long.");
+                return false;
+            }
+            if(password.length < 8) {
+                alert("Password must be at least 8 characters long.");
+                return false;
+            }
+
+            var userExists = users.some(function(user) {
+                return user.username === username;
+            });
+
+            if(userExists) {
+                alert("Username already taken. Please choose another one.");
+                return false;
+            };
+
+            users.push({username: username, password: password, firstName: firstName, lastName: lastName, personalNumber: personalNumber});
+            alert("Registration successful!");
+
+            registrationContainer.classList.add("hidden");
+            loginContainer.classList.remove("hidden");
+            document.forms["registrationForm"].reset();
+        };
+
+        function logInUser() {
+            let username = document.forms["loginForm"]["login_uname"].value;
+            let password = document.forms["loginForm"]["login_psw"].value;
+
+            let userFound = users.find(user => user.username === username && user.password === password);
+        
+            if (userFound) {
+                alert("Login successful! Welcome " + userFound.firstName);
+                loginContainer.classList.add("hidden");
+                loggedIn.classList.remove("hidden");
+                loggedIn.textContent = `Login successful! Welcome ${userFound.firstName} ${userFound.lastName}. Your deepest secret is ${userFound.personalNumber}.`;
+            }
+            else {
+                alert("Invalid email or password.");
+                loggedIn.classList.remove("hidden");
+                loggedIn.textContent = `Email or Password invalid, try again.`;
+            };
+        };
+    </script>
+    <style>
+        body {
+            width: 80%;
+            margin: auto;
+        }
+        button, input {
+            display: block;
+            margin: -1;
+        }
+            input[type="submit"] {
+            display: block;
+            margin: 1em 0;
+        }
+    </style>
+</body>
+</html>

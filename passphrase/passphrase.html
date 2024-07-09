@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passphrase</title>
+</head>
+<body>
+<div class="container">
+    <h1>Scenario 2</h1>
+    <h2>Username With Long Passphrase</h2>
+    <div class="section">
+        <h4>Description</h4>
+        <p>In this scenario, you will engage with an enhanced security login system that requires a longer "passphrase" for authentication. 
+            This method builds on the traditional username and password approach by enforcing a minimum passphrase 
+            length of 14 characters. The goal is to increase security by making passphrases harder to guess or crack,
+            protecting users' accounts and sensitive information more effectively.
+            In this scenario you also get the option to encrypt your data if you want to, this means that the owner of the website can not
+            read your data. This is a trade off in terms of usability versus privacy.
+        </p>
+    </div>
+    <div class="section">
+        <h3>Task 1: Register</h3>
+            <p> 
+                Register by entering your first name, last name, secret, email and passphrase into the respective fields, 
+                these credentials do not have to be real you can make them up if you prefer that.
+                In this case you will use a passphrase, the recommended way of doing this is 
+                to create a sentence with a mix of capital letters 
+                that is easy to remember for you. The passphrase has to be a minimum
+                of 14 characters. 
+                Make sure that you remember the credentials after registering. 
+                Click on the "Register" button to finish registration.
+            </p>
+            <p class="bold">Examples of passphrases: "I love ice cream!", "My Dog Is A Beatiful Dog!", 
+                "IWantToGoToNewYork!"
+            </p>
+    </div>
+    <div class="section">
+        <h3>Task 2: Login</h3>
+        <p>
+            Enter your email and passphrase into the respective fields.
+            Click the "Login" button to complete the authentication process.
+        </p>
+    </div>
+    <div class="section" id="privacy">
+        <h3>Privacy Notice</h3>
+        <p>
+            In this scenario you have the option if you would like the data to be encrypted or not.
+            If you decide to encrypt the data the company that owns the data can not read it.
+            However, if you decide to encrypt it, you will not be able to recover your account if you forget the passphrase.
+        </p>
+    </div>
+    <div class="section">
+        <p>
+            You can now decide if you want to encrypt the data.
+            The researchers removes all credentials after the experiment is done.
+        </p>
+        <fieldset>
+            <legend>Would you like to encrypt the data so that the owner of the website can not read it?:</legend>
+            <div>
+                <input type="checkbox" id="yes" name="yes" onclick="toggleWarning()">
+                <label for="yes">Yes</label>
+            </div>
+            <div>
+                <input type="checkbox" id="no" name="no">
+                <label for="no">No</label>
+            </div>
+        </fieldset>
+        <div id="warningMessage" class="warning">
+            Warning! Remember to write down your passphrase somewhere safe because you will not be able to recover it in the future.
+            The owner of the data can not help you recover the passphrase because your data is encrypted and not readable by the website.
+        </div>
+    </div>
+    <div class="button-container">
+        <button onclick="redirectToIndex()">Continue</button>
+    </div>
+</div>
+    <script>
+        function redirectToIndex() {
+            window.location.href = 'index.html';
+        };
+        function toggleWarning() {
+            var checkbox = document.getElementById('yes');
+            var warning = document.getElementById('warningMessage');
+            if (checkbox.checked) {
+                warning.style.display = 'block';
+            } else {
+                warning.style.display = 'none';
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 60%;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3, h4 {
+            color: #0056b3;
+            margin: auto;
+            text-align: center;
+        }
+
+        .section {
+            border-bottom: 2px solid #eee;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        fieldset {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 20px 0;
+        }
+
+        fieldset div {
+            margin-bottom: 10px;
+        }
+
+        .warning {
+            display: none;
+            background-color: #ffcc00;
+            color: #333;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        p, ul, legend {
+            margin-bottom: 1em;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        .bold {
+            font-weight: bold;
+        }
+    </style>
+</body>
+</html>

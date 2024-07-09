@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passkeys</title>
+</head>
+<body>
+    <h1>Scenario 3</h1>
+    <h2>Passkeys With Username</h2>
+    <h4>Information:</h4>
+    <p>
+        In this scenario, you will experience a passwordless authentication system, 
+        a modern approach to securing user accounts without the need for traditional passwords. 
+        Instead of remembering and entering a password, you will use a passkey in combination with a username. 
+        This method leverages a unique digital key, stored securely on your device, to authenticate your identity.
+        By eliminating passwords, these methods reduce the risk of phishing 
+        attacks and password theft.
+    </p>
+    <h4>Task:</h4>
+    <p>
+        Enter the provided username into the login form.
+        When prompted, will you will be asked to provide a passkey to be used for login, in this case you will use a phone which is provided
+        by the researchers. Select the phone option when provided with how you would like to set up your passkey.
+        You will then use the phone to login with the passkey.
+    </p>
+    <p>You can now decide if you want the website to save your information.</p>
+    <p>Keep in mind that if you do not allow it to save the information you will not be able to recover your password in the future</p>
+    <fieldset>
+        <legend>Would you like company X to save your information?:</legend>
+        <div>
+          <input type="checkbox" id="yes" name="yes" />
+          <label for="yes">Yes</label>
+        </div>
+        <div>
+          <input type="checkbox" id="no" name="no" />
+          <label for="no">No</label>
+        </div>
+    </fieldset>
+    <p>The researchers removes all credentials after the experiment is done.</p>
+    <h3>Click the following button to continue</h3>
+    <button onclick="redirectToIndex()">Continue</button>
+    <script>
+        function redirectToIndex() {
+            window.location.href = 'http://localhost:3000/';
+        }
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            height: 100vh;
+            text-align: center;
+            width: 80%;
+            margin: auto;
+        }
+        fieldset {
+            width: 30%;
+            margin: 20px auto; 
+            text-align: left; 
+        }
+        fieldset div {
+            display: flex; 
+            align-items: center; 
+            margin-bottom: 10px; 
+        }
+        button {
+            cursor: pointer;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</body>
+</html>

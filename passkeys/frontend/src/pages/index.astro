@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="utf-8">
+      <title>node.js-end-to-end-encrypted-platform</title>
+      <meta name="generator" content={Astro.generator} />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	  <title>Passkeys</title>
+</head>
+<body>
+    <form id="signup">
+        <h2>Sign up</h2>
+        <label for="reg_fname"><b>First Name</b></label>
+        <input type="text" placeholder="Enter First Name" name="reg_fname" id="reg_fname" required>
+
+        <label for="reg_lname"><b>Last Name</b></label>
+        <input type="text" placeholder="Enter Last Name" name="reg_lname" id="reg_lname" required>
+
+        <label for="reg_pnum"><b>Deepest secret</b></label>
+        <input type="text" placeholder="Enter a secret about you" name="reg_pnum" id="reg_pnum" required>
+        <label for="username">Email</label>
+        <input id="username" placeholder="Enter Email" name="username" id="username" /><br />
+        <button>Sign up with passkeys</button>
+    </form>
+    <form id="login" class="hidden">
+        <h2>Sign in</h2>
+        <button>Sign in with passkeys</button>
+    </form>
+    <p id="isLoggedIn" class="hidden">Not signed in.</p>
+    <script>
+        import auth from "../authenticate";
+
+        const users = [];
+
+        const signup = document.getElementById("signup");
+        const login = document.getElementById("login");
+        const loggedIn = document.getElementById("isLoggedIn");
+
+        signup.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(signup);
+            const username = formData.get("username");
+            const firstName = formData.get("reg_fname");
+            const lastName = formData.get("reg_lname");
+            const secret = formData.get("reg_pnum");
+            if (typeof username !== "string" || username.length < 1) return;
+            const user = await auth.signUp(username);
+            users.push({username: username, firstName: firstName, lastName: lastName, secret: secret});
+            alert("Registration Successful");
+            signup.classList.add("hidden");
+            login.classList.remove("hidden");
+        });
+
+        login.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const user = await auth.signIn();
+            const filteredUser = users.find(u => u.username === user.username);
+            loggedIn.classList.remove("hidden");
+            loggedIn.textContent = 
+            `Signed in as ${user.username} Name: ${filteredUser.firstName} ${filteredUser.lastName}, Secret: ${filteredUser.secret}`;
+        });
+    </script>
+    <style>
+    body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            width: 80%;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input:focus, button:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #isLoggedIn {
+            font-size: 16px;
+            color: green;
+            margin-top: 20px;
+        }
+
+        #isLoggedIn.hidden {
+            display: none;
+        }
+    </style>
+</body>
+</html>

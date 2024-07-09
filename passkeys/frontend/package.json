@@ -1,0 +1,14 @@
+{
+	"name": "frontend",
+	"type": "module",
+	"version": "1.0.0",
+	"scripts": {
+		"dev": "astro dev",
+		"start": "astro dev",
+		"astro": "astro"
+	},
+	"license": "MIT",
+	"dependencies": {
+		"astro": "^2.9.4"
+	}
+}
